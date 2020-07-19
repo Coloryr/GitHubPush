@@ -61,6 +61,12 @@ namespace GitHubPush
             public string timestamp { get; set; }
         }
 
+        public static string GetString(string a)
+        {
+            var index = a.LastIndexOf('/');
+            return a.Substring(index + 1, a.Length - index - 1);
+        }
+
         private static void AcceptAsync(HttpListenerContext context)
         {
             try
@@ -91,9 +97,21 @@ namespace GitHubPush
                                 message += "UUID:" + obj.head_commit.id + "\n";
                                 message += "消息:" + obj.head_commit.message + "\n";
                                 message += "时间:" + obj.head_commit.timestamp;
-                                foreach (var item in MainConfig.推送群号)
+                                var data2 = GetString(obj.repository.html_url);
+                                if (MainConfig.特殊推送.ContainsKey(data2))
                                 {
-                                    IGitHubPush.SGroupMessage(item, message);
+                                    var list = MainConfig.特殊推送[data2];
+                                    foreach (var item in list)
+                                    {
+                                        IGitHubPush.SGroupMessage(item, message);
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (var item in MainConfig.推送群号)
+                                    {
+                                        IGitHubPush.SGroupMessage(item, message);
+                                    }
                                 }
                             });
                         }
