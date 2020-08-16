@@ -19,6 +19,7 @@ namespace GitHubPush
                     string time = date.ToLongTimeString().ToString();
                     string write = "[" + year + "]" + "[" + time + "]" + a;
                     File.AppendAllText(GitHubPush.Path + log, write + Environment.NewLine);
+                    Console.WriteLine(write);
                 }
             }
             catch

@@ -1,15 +1,12 @@
 ﻿using GitHubPush.Config;
-using GitHubPush.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace GitHubPush
 {
@@ -103,14 +100,14 @@ namespace GitHubPush
                                     var list = MainConfig.特殊推送[data2];
                                     foreach (var item in list)
                                     {
-                                        IGitHubPush.SGroupMessage(item, message);
+                                        RobotSocket.SendGroupMessage(item, message);
                                     }
                                 }
                                 else
                                 {
                                     foreach (var item in MainConfig.推送群号)
                                     {
-                                        IGitHubPush.SGroupMessage(item, message);
+                                        RobotSocket.SendGroupMessage(item, message);
                                     }
                                 }
                             });
@@ -151,7 +148,7 @@ namespace GitHubPush
                 }
                 catch
                 {
-                    MessageBox.Show("[Minecraft_QQ]日志文件创建失败");
+                    Console.WriteLine("[Minecraft_QQ]日志文件创建失败");
                     return;
                 }
             }

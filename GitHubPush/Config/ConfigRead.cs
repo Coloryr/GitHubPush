@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
 
 namespace GitHubPush.Config
 {
@@ -36,14 +35,14 @@ namespace GitHubPush.Config
                 }
                 if (save)
                 {
-                    MessageBox.Show("Mainconfig.json配置文件读取发送错误，已经重写");
+                    Console.WriteLine("Mainconfig.json配置文件读取发送错误，已经重写");
                     new ConfigWrite().Config();
                 }
                 return config;
             }
             catch (Exception e)
             {
-                MessageBox.Show("快去检查你的Mainconfig.json文件语法，用的是json就要遵守语法！", "你配置文件爆了");
+                Console.WriteLine("快去检查你的Mainconfig.json文件语法，用的是json就要遵守语法！");
                 Logs.LogError(e);
                 return new MainConfig();
             }

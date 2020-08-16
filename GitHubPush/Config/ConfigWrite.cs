@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace GitHubPush.Config
 {
@@ -26,12 +25,7 @@ namespace GitHubPush.Config
                 catch (Exception e)
                 {
                     Logs.LogError(e);
-                    if (MessageBox.Show("配置" + FileName + "在写入时发发生了错误，是否要删除原来的配置文件再新生成一个？",
-                         "配置文件错误", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        File.Delete(FileName);
-                        Save(FileName, obj);
-                    }
+                    Console.WriteLine("配置文件在写入时发发生了错误");
                 }
             });
         }
