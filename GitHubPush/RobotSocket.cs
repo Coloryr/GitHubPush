@@ -40,7 +40,6 @@ namespace GitHubPush
     {
         private static Socket Socket;
         private static Thread ReadThread;
-        private static Thread DoThread;
         private static bool IsRun;
         private static bool IsConnect;
         private static ConcurrentBag<byte[]> QueueSend;
@@ -60,7 +59,6 @@ namespace GitHubPush
                 {
                     Thread.Sleep(100);
                 }
-                DoThread.Start();
                 byte[] Send;
                 int time = 0;
                 while (IsRun)
@@ -80,7 +78,7 @@ namespace GitHubPush
                                 IsConnect = false;
                             }
                         }
-                        else if ( QueueSend.TryTake(out Send))
+                        else if (QueueSend.TryTake(out Send))
                         {
                             Socket.Send(Send);
                         }

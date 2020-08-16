@@ -8,6 +8,7 @@ namespace GitHubPush
         {
             Console.WriteLine("Hello World!");
             GitHubPush.Start();
+            RobotSocket.Start();
 
             while (true)
             {
