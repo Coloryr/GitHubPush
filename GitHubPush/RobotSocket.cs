@@ -72,7 +72,7 @@ namespace GitHubPush
                         else if (time >= 20)
                         {
                             time = 0;
-                            if (Socket.Poll(1000, SelectMode.SelectRead))
+                            if (Socket.Poll(10000, SelectMode.SelectRead))
                             {
                                 Logs.LogWrite("机器人连接中断");
                                 IsConnect = false;
