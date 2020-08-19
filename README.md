@@ -8,7 +8,9 @@
 > 2. 启动GitHubPush
 > 3. 调整配置文件
 > 4. 准备一个http服务器
-> 5. 在github项目的webhook加上http服务器的网址
+> 5. 机器人默认端口为25555，你可以选择反代或者直接映射这个端口为http服务器
+> 直接在浏览器打开网址如果显示`ok`则运行成功
+> 6. 在github项目的webhook加上http服务器的网址
 > ![设置](readme/a.png)
 > ![设置](readme/b.png)
 >
