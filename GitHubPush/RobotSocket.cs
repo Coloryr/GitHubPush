@@ -60,7 +60,7 @@ namespace GitHubPush
                     Thread.Sleep(100);
                 }
                 byte[] Send;
-                int time = 0;
+                //int time = 0;
                 while (IsRun)
                 {
                     try
@@ -69,20 +69,23 @@ namespace GitHubPush
                         {
                             ReConnect();
                         }
-                        else if (time >= 20)
-                        {
-                            time = 0;
-                            if (Socket.Poll(10000, SelectMode.SelectRead))
-                            {
-                                Logs.LogWrite("机器人连接中断");
-                                IsConnect = false;
-                            }
-                        }
+                        //else if (time >= 200)
+                        //{
+                        //    time = 0;
+                        //    if (Socket.Poll(10000, SelectMode.SelectRead))
+                        //    {
+                        //        Logs.LogWrite("机器人连接中断");
+                        //        IsConnect = false;
+                        //        Logs.LogError("机器人20秒后重连");
+                        //        Thread.Sleep(20000);
+                        //        Logs.LogError("机器人重连中");
+                        //    }
+                        //}
                         else if (QueueSend.TryTake(out Send))
                         {
                             Socket.Send(Send);
                         }
-                        time++;
+                        //time++;
                         Thread.Sleep(50);
                     }
                     catch (Exception e)
