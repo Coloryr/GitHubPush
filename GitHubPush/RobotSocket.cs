@@ -12,12 +12,16 @@ using System.Threading.Tasks;
 
 namespace GitHubPush
 {
+    class PackBase
+    { 
+        public long qq { get; set; }
+    }
     class PackStart
     {
         public string Name { get; set; }
         public List<byte> Reg { get; set; }
     }
-    class SendGroupMessagePack
+    class SendGroupMessagePack : PackBase
     {
         public long id { get; set; }
         public List<string> message { get; set; }
@@ -129,7 +133,7 @@ namespace GitHubPush
         }
         public static void SendGroupMessage(long id, string message)
         {
-            var data = BuildPack.Build(new SendGroupMessagePack { id = id, message = new List<string>() { message } }, 52);
+            var data = BuildPack.Build(new SendGroupMessagePack { qq = GitHubPush.MainConfig.机器人QQ号, id = id, message = new List<string>() { message } }, 52);
             QueueSend.Add(data);
         }
         public static void Stop()
