@@ -1,10 +1,10 @@
-﻿# 酷Q的GitHub推送插件
+﻿# QQ机器人的GitHub推送插件
 需要.net5环境  
 支持多个群同时发送  
 支持单个项目向群发送  
 
 > 安装使用
-> 1. 编译并启动ColorMirai，机器人端口必须23333
+> 1. 编译并启动[ColorMirai](https://github.com/Coloryr/ColorMirai)，机器人端口必须23333
 > 2. 启动GitHubPush
 > 3. 调整配置文件
 > 4. 准备一个http服务器
