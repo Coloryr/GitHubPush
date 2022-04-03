@@ -89,9 +89,10 @@ namespace GitHubPush
                                     return;
                                 Logs.LogWrite("发现推送:" + obj.repository.html_url + "|" + obj.head_commit.id);
                                 string message = "GitHub仓库更新了!\n";
-                                message += "仓库:" + obj.repository.html_url + "\n";
+                                message += obj.repository.html_url + "\n";
+                                message += "分支:" + obj.Ref + "\n";
                                 message += "更新者:" + obj.pusher.name + "\n";
-                                message += "UUID:" + obj.head_commit.id + "\n";
+                                message += "id:" + obj.head_commit.id + "\n";
                                 message += "消息:" + obj.head_commit.message + "\n";
                                 message += "时间:" + obj.head_commit.timestamp;
                                 var data2 = GetString(obj.repository.html_url);
