@@ -1,41 +1,40 @@
 ﻿using System;
 using System.IO;
 
-namespace GitHubPush
+namespace GitHubPush;
+
+static class Logs
 {
-    internal class Logs
+    public static string log = "logs.log";
+    private static object obj = new object();
+
+    public static void LogWrite(string a)
     {
-        public static string log = "logs.log";
-        private static object obj = new object();
-
-        public static void LogWrite(string a)
+        try
         {
-            try
+            lock (obj)
             {
-                lock (obj)
-                {
-                    DateTime date = DateTime.Now;
-                    string year = date.ToShortDateString().ToString();
-                    string time = date.ToLongTimeString().ToString();
-                    string write = "[" + year + "]" + "[" + time + "]" + a;
-                    File.AppendAllText(Program.Path + log, write + Environment.NewLine);
-                    Console.WriteLine(write);
-                }
-            }
-            catch
-            {
-
+                DateTime date = DateTime.Now;
+                string year = date.ToShortDateString().ToString();
+                string time = date.ToLongTimeString().ToString();
+                string write = "[" + year + "]" + "[" + time + "]" + a;
+                File.AppendAllText(Program.Path + log, write + Environment.NewLine);
+                Console.WriteLine(write);
             }
         }
-
-        public static void LogError(Exception e)
+        catch
         {
-            LogWrite("[ERROR]" + e.Message + "\n" + e.StackTrace);
-        }
 
-        public static void LogError(string e)
-        {
-            LogWrite("[ERROR]" + e);
         }
+    }
+
+    public static void LogError(Exception e)
+    {
+        LogWrite("[ERROR]" + e.Message + "\n" + e.StackTrace);
+    }
+
+    public static void LogError(string e)
+    {
+        LogWrite("[ERROR]" + e);
     }
 }
