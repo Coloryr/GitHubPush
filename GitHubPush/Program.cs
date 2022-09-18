@@ -1,4 +1,4 @@
-﻿using GitHubPush.Robot;
+﻿using ColoryrSDK;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -11,7 +11,7 @@ namespace GitHubPush;
 
 class Program
 {
-    public const string Version = "1.2.0";
+    public const string Version = "1.3.0";
     public static RobotSDK robot { get; private set; } = new();
     /// <summary>
     /// 配置文件路径
@@ -158,7 +158,7 @@ class Program
             服务器端口 = 25555,
             机器人IP = "127.0.0.1",
             机器人QQ号 = 123456789,
-            机器人端口 = 23333,
+            机器人端口 = 23335,
             自动重连 = true,
             重连时间 = 10000
         }, Path + "config.json");
@@ -191,7 +191,7 @@ class Program
         };
 
         robot.Set(config);
-        robot.SetPipe(new ColorMiraiSocket(robot));
+        robot.SetPipe(new ColorMiraiNetty(robot));
         robot.Start();
 
         while (!robot.IsConnect) ;

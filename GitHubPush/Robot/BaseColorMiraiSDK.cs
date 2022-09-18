@@ -6,33 +6,41 @@ using System.Text;
 using System.Threading;
 //请用net6运行
 //并安装Newtonsoft.Json
-namespace GitHubPush.Robot;
+namespace ColoryrSDK;
 
 //机器人返回数据包
 /// <summary>
 /// 55 [插件]获取群列表
 /// </summary>
-public record ListGroupPack : PackBase
+public record ReListGroupPack : PackBase
 {
     /// <summary>
     /// 群列表
     /// </summary>
     public List<GroupInfo> groups { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 56 [插件]获取好友列表
 /// </summary>
-public record ListFriendPack : PackBase
+public record ReListFriendPack : PackBase
 {
     /// <summary>
     /// 朋友列表
     /// </summary>
-    public List<FriendInfoPack> friends { get; set; }
+    public List<ReFriendInfoPack> friends { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 57 [插件]获取群成员
 /// </summary>
-public record ListMemberPack : PackBase
+public record ReListMemberPack : PackBase
 {
     /// <summary>
     /// 群号
@@ -41,12 +49,16 @@ public record ListMemberPack : PackBase
     /// <summary>
     /// 成员列表
     /// </summary>
-    public List<MemberInfoPack> members { get; set; }
+    public List<ReMemberInfoPack> members { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 58 [插件]获取群设置
 /// </summary>
-public record GroupSettingPack : PackBase
+public record ReGroupSettingPack : PackBase
 {
     /// <summary>
     /// 群号
@@ -56,11 +68,15 @@ public record GroupSettingPack : PackBase
     /// 设定
     /// </summary>
     public GroupSettings setting { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 90 [插件]获取图片Url
 /// </summary>
-public record ReImagePack : PackBase
+public record ReGetImageUrlPack : PackBase
 {
     /// <summary>
     /// 图片UUID
@@ -74,7 +90,7 @@ public record ReImagePack : PackBase
 /// <summary>
 /// 91 [插件]获取群成员信息
 /// </summary>
-public record MemberInfoPack : PackBase
+public record ReMemberInfoPack : PackBase
 {
     /// <summary>
     /// 群号
@@ -120,11 +136,15 @@ public record MemberInfoPack : PackBase
     /// 最后发言时间
     /// </summary>
     public int lastSpeakTimestamp { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 92 [插件]获取朋友信息
 /// </summary>
-public record FriendInfoPack : PackBase
+public record ReFriendInfoPack : PackBase
 {
     /// <summary>
     /// QQ号
@@ -142,11 +162,15 @@ public record FriendInfoPack : PackBase
     /// 用户详细资料
     /// </summary>
     public UserProfile userProfile { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 101 [插件]获取群文件
 /// </summary>
-public record GroupFilesPack : PackBase
+public record ReGroupFilesPack : PackBase
 {
     /// <summary>
     /// 群号
@@ -156,11 +180,15 @@ public record GroupFilesPack : PackBase
     /// 文件列表
     /// </summary>
     public List<GroupFileInfo> files { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 109 [插件]获取群公告
 /// </summary>
-public record GroupAnnouncementsPack : PackBase
+public record ReGroupAnnouncementsPack : PackBase
 {
     /// <summary>
     /// 群号
@@ -170,6 +198,10 @@ public record GroupAnnouncementsPack : PackBase
     /// 群公告
     /// </summary>
     public List<GroupAnnouncement> list { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 //机器人枚举
 /// <summary>
@@ -380,6 +412,28 @@ public record GroupSettings
     /// 匿名聊天
     /// </summary>
     public bool isAnonymousChatEnabled { get; set; }
+}
+/// <summary>
+/// 消息来源类型
+/// </summary>
+public enum MessageSourceKind
+{
+    /// <summary>
+    /// 群消息
+    /// </summary>
+    GROUP = 0,
+    /// <summary>
+    /// 好友消息
+    /// </summary>
+    FRIEND,
+    /// <summary>
+    /// 来自群成员的临时会话消息
+    /// </summary>
+    TEMP,
+    /// <summary>
+    /// 来自陌生人的消息
+    /// </summary>
+    STRANGER
 }
 //机器人公共数据包
 /// <summary>
@@ -653,6 +707,14 @@ public record FriendMessagePostSendEventPack : PackBase
     /// </summary>
     public bool res { get; set; }
     /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
+    /// <summary>
     /// 消息
     /// </summary>
     public List<string> message { get; set; }
@@ -758,25 +820,25 @@ public record GroupAllowMemberInviteEventPack : PackBase
 /// <summary>
 /// 27 [机器人]入群公告改变（事件）
 /// </summary>
-public record GroupEntranceAnnouncementChangeEventPack : PackBase
-{
-    /// <summary>
-    /// 群号
-    /// </summary>
-    public long id { get; set; }
-    /// <summary>
-    /// 执行人QQ号
-    /// </summary>
-    public long fid { get; set; }
-    /// <summary>
-    /// 旧的状态
-    /// </summary>
-    public bool old { get; set; }
-    /// <summary>
-    /// 新的状态
-    /// </summary>
-    public bool now { get; set; }
-}
+//public record GroupEntranceAnnouncementChangeEventPack : PackBase
+//{
+//    / <summary>
+//    / 群号
+//    / </summary>
+//    public long id { get; set; }
+//    / <summary>
+//    / 执行人QQ号
+//    / </summary>
+//    public long fid { get; set; }
+//    / <summary>
+//    / 旧的状态
+//    / </summary>
+//    public bool old { get; set; }
+//    / <summary>
+//    / 新的状态
+//    / </summary>
+//    public bool now { get; set; }
+//}
 /// <summary>
 /// 28 [机器人]在群消息发送后广播（事件）
 /// </summary>
@@ -790,6 +852,14 @@ public record GroupMessagePostSendEventPack : PackBase
     /// 是否发送成功
     /// </summary>
     public bool res { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
     /// <summary>
     /// 发送的消息
     /// </summary>
@@ -1189,6 +1259,14 @@ public record TempMessagePostSendEventPack : PackBase
     /// </summary>
     public bool res { get; set; }
     /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
+    /// <summary>
     /// 消息
     /// </summary>
     public List<string> message { get; set; }
@@ -1233,6 +1311,18 @@ public record GroupMessageEventPack : PackBase
     /// </summary>
     public string name { get; set; }
     /// <summary>
+    /// 发送时间
+    /// </summary>
+    public int time { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
+    /// <summary>
     /// 发送人权限
     /// </summary>
     public MemberPermission permission { get; set; }
@@ -1259,6 +1349,14 @@ public record TempMessageEventPack : PackBase
     /// </summary>
     public string name { get; set; }
     /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
+    /// <summary>
     /// 发送人权限
     /// </summary>
     public MemberPermission permission { get; set; }
@@ -1284,6 +1382,14 @@ public record FriendMessageEventPack : PackBase
     /// 昵称
     /// </summary>
     public string name { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
     /// <summary>
     /// 消息
     /// </summary>
@@ -1353,7 +1459,10 @@ public record SendFriendMessagePack : PackBase
 /// </summary>
 public record GetPack : PackBase
 {
-
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 57 [插件]获取群成员
@@ -1364,6 +1473,10 @@ public record GroupGetMemberInfoPack : PackBase
     /// 群号
     /// </summary>
     public long id { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 58 [插件]获取群设置
@@ -1374,6 +1487,10 @@ public record GroupGetSettingPack : PackBase
     /// 群号
     /// </summary>
     public long id { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 59 [插件]回应事件
@@ -1557,7 +1674,15 @@ public record ReCallMessagePack : PackBase
     /// <summary>
     /// 消息ID
     /// </summary>
-    public int id { get; set; }
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
+    /// <summary>
+    /// 消息类型
+    /// </summary>
+    public MessageSourceKind kind { get; set; }
 }
 /// <summary>
 /// 72 [机器人]友输入状态改变（事件）
@@ -1889,6 +2014,10 @@ public record GetMemberInfoPack : PackBase
     /// 群员QQ号
     /// </summary>
     public long fid { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 92 [插件]获取朋友信息
@@ -1899,6 +2028,10 @@ public record GetFriendInfoPack : PackBase
     /// 朋友QQ号
     /// </summary>
     public long id { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 93 [插件]发送音乐分享
@@ -1954,7 +2087,11 @@ public record GroupSetEssenceMessagePack : PackBase
     /// <summary>
     /// 消息ID
     /// </summary>
-    public int mid { get; set; }
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
 }
 /// <summary>
 /// 95 [插件]消息队列
@@ -2078,6 +2215,10 @@ public record GroupGetFilesPack : PackBase
     /// 群号
     /// </summary>
     public long id { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 102 [插件]移动群文件
@@ -2206,6 +2347,10 @@ public record GroupGetAnnouncementsPack : PackBase
     /// 群号
     /// </summary>
     public long id { get; set; }
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
 }
 /// <summary>
 /// 110 [插件]设置群公告
@@ -2485,51 +2630,51 @@ public record RobotConfig
     /// <summary>
     /// 机器人IP
     /// </summary>
-    public string IP { get; init; }
+    public string IP { get; set; }
     /// <summary>
     /// 机器人端口
     /// </summary>
-    public int Port { get; init; }
+    public int Port { get; set; }
     /// <summary>
     /// 监听的包
     /// </summary>
-    public List<byte> Pack { get; init; }
+    public List<byte> Pack { get; set; }
     /// <summary>
     /// 插件名字
     /// </summary>
-    public string Name { get; init; }
+    public string Name { get; set; }
     /// <summary>
     /// 监听的群，可以为null
     /// </summary>
-    public List<long> Groups { get; init; }
+    public List<long> Groups { get; set; }
     /// <summary>
     /// 监听的qq号，可以为null
     /// </summary>
-    public List<long> QQs { get; init; }
+    public List<long> QQs { get; set; }
     /// <summary>
     /// 运行的qq，可以不设置
     /// </summary>
-    public long RunQQ { get; init; }
+    public long RunQQ { get; set; }
     /// <summary>
     /// 重连时间
     /// </summary>
-    public int Time { get; init; }
+    public int Time { get; set; }
     /// <summary>
     /// 检测是否断开
     /// </summary>
-    public bool Check { get; init; }
+    public bool Check { get; set; }
     /// <summary>
     /// 机器人事件回调函数
     /// </summary>
-    public Action<byte, object> CallAction { get; init; }
+    public Action<byte, object> CallAction { get; set; }
     /// <summary>
     /// 机器人日志回调函数
     /// </summary>
-    public Action<LogType, string> LogAction { get; init; }
+    public Action<LogType, string> LogAction { get; set; }
     /// <summary>
     /// 机器人状态回调函数
     /// </summary>
-    public Action<StateType> StateAction { get; init; }
+    public Action<StateType> StateAction { get; set; }
 }
 
 public enum LogType
@@ -2572,7 +2717,7 @@ public partial class RobotSDK
         { 24, typeof(GroupAllowAnonymousChatEventPack) },
         { 25, typeof(GroupAllowConfessTalkEventPack) },
         { 26, typeof(GroupAllowMemberInviteEventPack) },
-        { 27, typeof(GroupEntranceAnnouncementChangeEventPack) },
+        //{ 27, typeof(GroupEntranceAnnouncementChangeEventPack) },
         { 28, typeof(GroupMessagePostSendEventPack) },
         { 29, typeof(GroupMessagePreSendEventPack) },
         { 30, typeof(GroupMuteAllEventPack) },
@@ -2600,13 +2745,13 @@ public partial class RobotSDK
         { 52, typeof(SendGroupMessagePack) },
         { 53, typeof(SendGroupPrivateMessagePack) },
         { 54, typeof(SendFriendMessagePack) },
-        { 55, typeof(GetPack) },
-        { 56, typeof(GetPack) },
-        { 57, typeof(GroupGetMemberInfoPack) },
-        { 58, typeof(GroupGetSettingPack) },
+        { 55, typeof(ReListGroupPack) },
+        { 56, typeof(ReListFriendPack) },
+        { 57, typeof(ReListMemberPack) },
+        { 58, typeof(ReGroupSettingPack) },
         { 59, typeof(EventCallPack) },
         //60无
-        { 61, typeof(SendGroupPrivateImagePack) },
+        { 61, typeof(SendGroupImagePack) },
         { 62, typeof(SendGroupPrivateImagePack)},
         { 63, typeof(SendFriendImagePack)},
         { 64, typeof(GroupKickMemberPack) },
@@ -2635,9 +2780,9 @@ public partial class RobotSDK
         { 87, typeof(OtherClientOfflineEventPack) },
         { 88, typeof(OtherClientMessageEventPack) },
         { 89, typeof(GroupMessageSyncEventPack) },
-        { 90, typeof(GetImageUrlPack) },
-        { 91, typeof(GetMemberInfoPack) },
-        { 92, typeof(GetFriendInfoPack) },
+        { 90, typeof(ReGetImageUrlPack) },
+        { 91, typeof(ReMemberInfoPack) },
+        { 92, typeof(ReFriendInfoPack) },
         { 93, typeof(SendMusicSharePack) },
         { 94, typeof(GroupSetEssenceMessagePack) },
         { 95, typeof(MessageBuffPack) },
@@ -2646,7 +2791,7 @@ public partial class RobotSDK
         { 98, typeof(SendGroupPrivateDicePack) },
         { 99, typeof(GroupAddFilePack) },
         { 100, typeof(GroupDeleteFilePack) },
-        { 101, typeof(GroupGetFilesPack) },
+        { 101, typeof(ReGroupFilesPack) },
         { 102, typeof(GroupMoveFilePack) },
         { 103, typeof(GroupRenameFilePack) },
         { 104, typeof(GroupAddDirPack) },
@@ -2654,7 +2799,7 @@ public partial class RobotSDK
         { 106, typeof(GroupRenameDirPack) },
         { 107, typeof(GroupDownloadFilePack) },
         { 108, typeof(GroupSetAdminPack) },
-        { 109, typeof(GroupGetAnnouncementsPack) },
+        { 109, typeof(ReGroupAnnouncementsPack) },
         { 110, typeof(GroupAddAnnouncementPack) },
         { 111, typeof(GroupDeleteAnnouncementPack) },
         { 112, typeof(SendFriendSoundFilePack) },
@@ -2768,38 +2913,40 @@ public partial class RobotSDK
         if (DoThread?.IsAlive == true)
             return;
         QueueRead = new();
-        DoThread = new(() =>
-        {
-            while (IsRun)
-            {
-                try
-                {
-                    if (QueueRead.TryTake(out RobotTask task))
-                    {
-                        if (task.Index == 60)
-                            continue;
-                        if (CallTop(task.Index, task.Data))
-                            continue;
-                        if (PackType.TryGetValue(task.Index, out var type))
-                        {
-                            RobotCallEvent.Invoke(task.Index, Convert.ChangeType(task.Data, type));
-                        }
-                        else
-                        {
-                            LogError($"不认识的数据包{task.Index}");
-                        }
-                    }
-                    Thread.Sleep(10);
-                }
-                catch (Exception e)
-                {
-                    LogError(e);
-                }
-            }
-        });
+        DoThread = new(Read);
         IsRun = true;
         DoThread.Start();
         Pipe.StartRead();
+    }
+
+    private void Read()
+    {
+        while (IsRun)
+        {
+            try
+            {
+                if (QueueRead.TryTake(out RobotTask task))
+                {
+                    if (task.Index == 60)
+                        continue;
+                    if (CallTop(task.Index, task.Data))
+                        continue;
+                    if (PackType.TryGetValue(task.Index, out var type))
+                    {
+                        RobotCallEvent.Invoke(task.Index, Convert.ChangeType(task.Data, type));
+                    }
+                    else
+                    {
+                        LogError($"不认识的数据包{task.Index}");
+                    }
+                }
+                Thread.Sleep(10);
+            }
+            catch (Exception e)
+            {
+                LogError(e);
+            }
+        }
     }
 
     /// <summary>
@@ -2820,6 +2967,7 @@ public partial class RobotSDK
     /// 添加数据包
     /// </summary>
     /// <param name="data">数据包</param>
+    /// <param name="index">包ID</param>
     internal void AddSend(PackBase pack, byte index)
     {
         Pipe.AddSend(pack, index);
