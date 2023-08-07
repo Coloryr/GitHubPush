@@ -12,13 +12,13 @@ public class ConfigFile
 }
 public class MainConfig
 {
-    public List<long> 推送群号 { get; set; }
-    public Dictionary<string, List<long>> 特殊推送 { get; set; }
-    public string 服务器地址 { get; set; }
-    public int 服务器端口 { get; set; }
-    public long 机器人QQ号 { get; set; }
-    public bool 自动重连 { get; set; }
-    public int 重连时间 { get; set; }
-    public string 机器人IP { get; set; }
-    public int 机器人端口 { get; set; }
+    public List<long> Group { get; set; }
+    public Dictionary<string, List<long>> GroupT { get; set; }
+    public int Port { get; set; }
+    public long QQ { get; set; }
+    public bool AutoConnect { get; set; }
+    public int Time { get; set; }
+    public string BotIP { get; set; }
+    public int BotPort { get; set; }
+    public bool NoInput { get; set; }
 }

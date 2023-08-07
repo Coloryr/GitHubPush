@@ -96,9 +96,9 @@ class Program
                             message += "消息:" + obj.head_commit.message + "\n";
                             message += "时间:" + obj.head_commit.timestamp;
                             var data2 = GetString(obj.repository.html_url);
-                            if (MainConfig.特殊推送.ContainsKey(data2))
+                            if (MainConfig.GroupT.ContainsKey(data2))
                             {
-                                var list = MainConfig.特殊推送[data2];
+                                var list = MainConfig.GroupT[data2];
                                 foreach (var item in list)
                                 {
                                     robot.AddSend(new SendGroupMessagePack
@@ -114,7 +114,7 @@ class Program
                             }
                             else
                             {
-                                foreach (var item in MainConfig.推送群号)
+                                foreach (var item in MainConfig.Group)
                                 {
                                     robot.AddSend(new SendGroupMessagePack
                                     {
@@ -151,21 +151,19 @@ class Program
     {
         MainConfig = ConfigUtils.Config(new MainConfig
         {
-            推送群号 = new()
-            { 123456789 },
-            特殊推送 = new() { { "test", new() { 123456789 } } },
-            服务器地址 = "127.0.0.1",
-            服务器端口 = 25555,
-            机器人IP = "127.0.0.1",
-            机器人QQ号 = 123456789,
-            机器人端口 = 23335,
-            自动重连 = true,
-            重连时间 = 10000
+            Group = new(),
+            GroupT = new() { { "test", new() { 123456789 } } },
+            Port = 25555,
+            BotIP = "127.0.0.1",
+            QQ = 123456789,
+            BotPort = 23335,
+            AutoConnect = true,
+            Time = 10000
         }, Path + "config.json");
 
         try
         {
-            listener.Prefixes.Add("http://" + MainConfig.服务器地址 + ":" + MainConfig.服务器端口 + "/");
+            listener.Prefixes.Add("http://+:" + MainConfig.Port + "/");
             listener.Start();
             listener.BeginGetContext(ContextReady, null);
             IsStart = true;
@@ -178,13 +176,13 @@ class Program
 
         RobotConfig config = new()
         {
-            IP = MainConfig.机器人IP,
-            Port = MainConfig.机器人端口,
+            IP = MainConfig.BotIP,
+            Port = MainConfig.BotPort,
             Name = "GitHubPush",
             Pack = new() { },
-            RunQQ = MainConfig.机器人QQ号,
-            Time = MainConfig.重连时间,
-            Check = MainConfig.自动重连,
+            RunQQ = MainConfig.QQ,
+            Time = MainConfig.Time,
+            Check = MainConfig.AutoConnect,
             CallAction = (a,b) => { },
             LogAction = (type,data) => { Logs.LogWrite($"日志:{type} {data}"); },
             StateAction = (type) => { Logs.LogWrite($"日志:{type}"); }
@@ -195,15 +193,17 @@ class Program
         robot.Start();
 
         while (!robot.IsConnect) ;
-
-        while (true)
+        if (!MainConfig.NoInput)
         {
-            string data = Console.ReadLine();
-            if (data == "stop")
+            while (true)
             {
-                IsStart = false;
-                listener.Stop();
-                robot.Stop();
+                string data = Console.ReadLine();
+                if (data == "stop")
+                {
+                    IsStart = false;
+                    listener.Stop();
+                    robot.Stop();
+                }
             }
         }
     }
